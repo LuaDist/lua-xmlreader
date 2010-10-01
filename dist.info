@@ -1,0 +1,15 @@
+--- This file is part of LuaDist project
+
+name = "lua-xmlreader"
+version = "0.1"
+
+desc = "An implementation of the XmlReader API using libxml2."
+author = "A.S. Bradbury"
+license = "MIT/X11"
+url = "http://asbradbury.org/projects/lua-xmlreader/"
+maintainer = "Peter Kapec"
+
+depends = {
+	"lua ~> 5.1",
+	"libxml2 >=2.4.12"
+}
