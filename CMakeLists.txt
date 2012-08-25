@@ -1,36 +1,29 @@
-# Copyright (C) 2007-2009 LuaDist.
+# Copyright (C) 2007-2012 LuaDist.
 # Created by Peter Kapec
 # Redistribution and use of this file is allowed according to the terms of the MIT license.
 # For details see the COPYRIGHT file distributed with LuaDist.
 # Please note that the package source code is licensed under its own license.
 
-PROJECT(lua_xmlreader C)
-CMAKE_MINIMUM_REQUIRED(VERSION 2.6)
-INCLUDE(dist.cmake)
+project ( lua_xmlreader C )
+cmake_minimum_required ( VERSION 2.8 )
+include ( cmake/dist.cmake )
+include ( lua )
 
 # We need Xml2 to compile
-FIND_PACKAGE (LibXml2 REQUIRED)
-INCLUDE_DIRECTORIES(${LIBXML2_INCLUDE_DIR})
+find_package ( LibXml2 REQUIRED )
+include_directories ( ${LIBXML2_INCLUDE_DIR} )
 
 # Build
-INCLUDE_DIRECTORIES(.)
-ADD_LUA_MODULE(xmlreader error.c xmlreader.c)
-TARGET_LINK_LIBRARIES(xmlreader ${LIBXML2_LIBRARIES})
-ADD_LUA_TEST(example.lua)
+include_directories ( . )
+install_lua_module ( xmlreader error.c xmlreader.c LINK ${LIBXML2_LIBRARIES} )
 
 # Build doc
-FIND_PROGRAM(LUA NAMES lua lua.bat)
-ADD_CUSTOM_COMMAND(
-	OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/xmlreader.html
-	DEPENDS doc/extract_doc.lua xmlreader.c
-	COMMAND ${LUA} doc/extract_doc.lua xmlreader.c
-	        > ${CMAKE_CURRENT_BINARY_DIR}/xmlreader.html
-	WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
-)
-ADD_CUSTOM_TARGET(html ALL DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/xmlreader.html)
+add_custom_command ( OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/xmlreader.html DEPENDS doc/extract_doc.lua 
+  xmlreader.c COMMAND ${LUA_EXECUTABLE} doc/extract_doc.lua xmlreader.c > ${CMAKE_CURRENT_BINARY_DIR}/xmlreader.html 
+  WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} )
+add_custom_target ( html ALL DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/xmlreader.html )
 
 # Install all files and documentation
-INSTALL (TARGETS xmlreader DESTINATION ${INSTALL_CMOD})
-INSTALL (FILES LICENSE README DESTINATION ${INSTALL_DATA})
-INSTALL (FILES example.lua DESTINATION ${INSTALL_TEST})
-INSTALL (FILES doc/doc_style.css ${CMAKE_CURRENT_BINARY_DIR}/xmlreader.html DESTINATION ${INSTALL_DOC})
+install_data ( LICENSE README )
+install_example ( example.lua )
+install_doc ( doc/doc_style.css ${CMAKE_CURRENT_BINARY_DIR}/xmlreader.html ${INSTALL_DOC} )
